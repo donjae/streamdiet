@@ -1,0 +1,44 @@
+.wrapper{
+  height: 100%;
+}
+
+.Grid {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  height: 100%;
+}
+/*===========================================*/
+
+/* Base classes for all media - Mobile first */
+.Grid--cols-2 > .Grid-cell {
+  flex: 0 0 100%;
+  //flex: 2;
+  height: 70%;
+}
+
+
+.Grid--cols-2 > .Grid-cell2 {
+  flex: 0 0 100%;
+  //flex: 1;
+  height: 30%;
+}
+
+
+/* Large screens */
+@media (min-width: 65em) {
+  .Grid--cols-2 > .Grid-cell{
+    flex: 3;
+    height: 100%;
+  }
+  .Grid--cols-2 > .Grid-cell2{
+    flex: 1;
+    min-width: 400px;
+    height: 100%;
+  }
+
+}
+
+
+
+
