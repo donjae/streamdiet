@@ -1,0 +1,149 @@
+.slide {
+  position: inherit;
+  max-height: 100%;
+  height: auto;
+  object-fit: cover;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1.0, 1.0);
+  background-size: 100% 100%;
+  max-width:100%;
+  z-index: 2;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+
+
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+
+  &--hidden-initial {
+    display: none;
+  }
+
+  // Animation Slide Overlap
+
+  &--hidden-1-next {
+    //display: none;
+    //left: -100%;
+    //transition: left 0.7s linear;
+  }
+
+  &--hidden-1-prev {
+    //display: none;
+    //left: 100%;
+    //transition: left 0.7s linear;
+  }
+
+  @keyframes next {
+    //0% {
+    //  left: 99%;
+    //}
+    //
+    //100% {
+    //  left: 0;
+    //}
+  }
+
+  @keyframes prev {
+  //  0% {
+  //    left: -99%;
+  //  }
+  //
+  //  100% {
+  //    left: 0;
+  //  }
+  }
+
+  &--show-1-next {
+    animation: next 0.7s 1 ease-out;
+  }
+
+  &--show-1-prev {
+    animation: prev 0.7s 1 ease-out;
+  }
+
+  // Animation Slide
+
+  &--hidden-2-next {
+    left: -100%;
+    transition: left 0.7s ease-out;
+  }
+
+  &--hidden-2-prev {
+    left: 100%;
+    transition: left 0.7s ease-out;
+  }
+
+  @keyframes next-overlap {
+    0% {
+      left: 99%;
+    }
+
+    100% {
+      left: 0;
+    }
+  }
+
+  @keyframes prev-overlap {
+    0% {
+      left: -99%;
+    }
+
+    100% {
+      left: 0;
+    }
+  }
+
+  &--show-2-next {
+    //animation: next-overlap 0.7s 1 ease-out;
+    animation: fadein .3s;
+  }
+
+  &--show-2-prev {
+    //animation: prev-overlap 0.7s 1 ease-out;
+    animation: fadein .3s;
+  }
+
+  // Animation Appear
+
+  &--hidden-0-next {
+    transition: opacity 0.7s ease-in;
+    opacity: 0;
+  }
+
+  &--hidden-0-prev {
+    transition: opacity 0.7s ease-in;
+    opacity: 0;
+  }
+
+  @keyframes next-appear {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes prev-appear {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  &--show-0-next {
+    animation: next-appear 0.7s 1 ease-out;
+  }
+
+  &--show-0-prev {
+    animation: prev-appear 0.7s 1 ease-out;
+  }
+}

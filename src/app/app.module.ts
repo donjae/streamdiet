@@ -12,7 +12,7 @@ import { EmitterService } from './reddit/emitter.service';
 // import { CarouselComponent, CarouselItemElement } from './carousel/carousel.component';
 // import { CarouselItemDirective } from './carousel/carousel-item.directive';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CarouselModule } from 'angular4-carousel';
+import { CarouselModule } from './angular4-carousel';
 
 @NgModule({
   imports: [

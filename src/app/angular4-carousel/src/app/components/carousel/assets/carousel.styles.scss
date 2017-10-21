@@ -1,0 +1,58 @@
+.carousel-wrapper {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-bg{
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  filter: blur(8px);
+  z-index: 1;
+  transform: scale(1.02);
+  position: absolute;
+}
+
+.darken-overlay{
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, .5);
+  position: absolute;
+}
+
+.carousel-nav{
+  z-index: 3;
+
+}
+
+.title{
+  position: absolute;
+  bottom: 3rem;
+  left: 2rem;
+  color: white;
+  z-index: 3;
+  font-size: 1rem;
+  margin-right: 3rem;
+  //line-height: 90%;
+  font-weight: 500;
+  text-rendering: optimizeLegibility;
+  font-family: 'Montserrat', sans-serif;
+}
+//background-color: rgba(38, 38, 38, 0.95);
+
+@media (min-width: 65em) {
+  .title{
+    //line-height: 90%;
+    font-size: 2rem;
+  }
+
+}
+.title span{
+  //padding: 0rem .3rem rem 0rem;
+  text-align: left;
+  background-color: rgba(38, 38, 38, 0.82);
+}
