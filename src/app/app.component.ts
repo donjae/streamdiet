@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RedditService } from './reddit/reddit.service';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { EmitterService } from './reddit/emitter.service'
 // import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -23,7 +23,7 @@ import 'rxjs/add/observable/of';
   `,
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   // title: string;
   // domain: string;
   // author: string;
@@ -31,62 +31,75 @@ export class AppComponent implements OnInit{
   story: Object
   imageLink = []
   storiesArr = []
+  commentUrl = []
 
 
-  constructor(
-    private redditService: RedditService,
-    private http: Http,
-    public emitterService: EmitterService,
-  ){
+  constructor(private redditService: RedditService,
+              private http: Http,
+              public emitterService: EmitterService,) {
     let result = []
     let images = []
-    let emitted = {stories: [], images: []}
+    let emitted = {stories: [], images: [], commentUrl: []}
     let imgur = /imgur/i
+    let gfycat = /gfycat/i
+    let streamable = /streamable/i
+    let giphy = /giphy/i
 
 
     this.http.get('https://www.reddit.com/r/popular/hot.json')
-      // Mergemap is required to merge nested object in array
+    // Mergemap is required to merge nested object in array
       .mergeMap(response => response.json().data.children)
       .map(data => Object.keys(data).map(k => data[k]))
       .subscribe(
-        (data)=>{
+        (data)=> {
           // emitted.stories.push(data[1]);
           // console.log(data[1])
-          if(imgur.test(data[1].domain)){
-            this.crawlImgur(data[1].url, data[1])
+          if (imgur.test(data[1].domain)) {
+            this.crawlImgur(data[1].url, data[1], data[1].permalink)
           }
-          else if(data[1].preview !== undefined && !imgur.test(data[1].domain)){
+          else if (gfycat.test(data[1].domain)) {
+            this.crawlGfycat(data[1].url, data[1], data[1].permalink)
+          }
+          else if (streamable.test(data[1].domain)) {
+            this.crawlStreamable(data[1].url, data[1], data[1].permalink)
+          }
+          else if (giphy.test(data[1].domain)) {
+            this.crawlGiphy(data[1].url, data[1], data[1].permalink)
+          }
+          else if (data[1].preview !== undefined && !imgur.test(data[1].domain)) {
             this.imageLink.push(data[1].preview.images[0].source.url)
             this.storiesArr.push(data[1])
+            this.commentUrl.push(data[1].permalink)
           }
-          else{
+          else {
             this.imageLink.push(null)
             this.storiesArr.push(data[1])
+            this.commentUrl.push(data[1].permalink)
           }
         },
-        (err)=>{
+        (err)=> {
           console.log('Parsing Error: %s', err);
         },
-        ()=>{
+        ()=> {
           // this.story = result[0]
           // console.log(result)
           // emitted.stories = result
           emitted.images = this.imageLink
           emitted.stories = this.storiesArr
+          emitted.commentUrl = this.commentUrl
           console.log(emitted)
           this.emitterService.newsEmitter.emit(emitted)
         });
 
 
-
   }
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   //dont need to retain order
 
-  crawlImgur(url: string, story){
+  crawlImgur(url: string, story, permalink) {
 
     let hashRe = /^https?:\/\/(?:i\.|m\.|edge\.|www\.)*imgur\.com\/(?:r\/\w+\/)*(?!gallery)(?!removalrequest)(?!random)(?!memegen)((?:\w{5}|\w{7})(?:[&,](?:\w{5}|\w{7}))*)(?:#\d+)?[a-z]?(\.(?:jpe?g|gifv?|png))?(\?.*)?$/i;
     //for imgur galleries
@@ -105,32 +118,35 @@ export class AppComponent implements OnInit{
       this.http.get('https://api.imgur.com/3/gallery/' + imgurSplit[1], {headers: headers})
         .map(data => data.json().data)
         .subscribe(image => {
-          if (['image/png', 'image/jpeg'].includes(image.type)) {
-            this.imageLink.push(image.link)
-          } else {
-            this.imageLink.push('http://i.imgur.com/' + image.id + 'h.jpg')
-          }
-        },
-          (err)=>{},
-          ()=>{
+            if (['image/png', 'image/jpeg'].includes(image.type)) {
+              this.imageLink.push(image.link)
+            } else {
+              this.imageLink.push('http://i.imgur.com/' + image.id + 'h.jpg')
+            }
+          },
+          (err)=> {
+          },
+          ()=> {
             this.storiesArr.push(story);
+            this.commentUrl.push(permalink)
           })
     }
 
     else if (imgurSplit = albumHashRe.exec(url)) {
-      // console.log(imgurSplit[3] + ' ' + imgurSplit[1])
       this.http.get('https://api.imgur.com/3/album/' + imgurSplit[1], {headers: headers})
         .map(data => data.json().data)
         .subscribe(image => {
-          if (['image/png', 'image/jpeg'].includes(image.type)) {
-            this.imageLink.push(image.link)
-          } else {
-            this.imageLink.push('http://i.imgur.com/' + image.id + 'h.jpg')
-          }
-        },
-          (err)=>{},
-          ()=>{
+            if (['image/png', 'image/jpeg'].includes(image.type)) {
+              this.imageLink.push(image.link)
+            } else {
+              this.imageLink.push('http://i.imgur.com/' + image.id + 'h.jpg')
+            }
+          },
+          (err)=> {
+          },
+          ()=> {
             this.storiesArr.push(story);
+            this.commentUrl.push(permalink)
           })
     }
 
@@ -138,22 +154,103 @@ export class AppComponent implements OnInit{
       this.http.get('https://api.imgur.com/3/image/' + imgurSplit[1], {headers: headers})
         .map(data => data.json().data)
         .subscribe(image => {
-          if (['image/png', 'image/jpeg'].includes(image.type)){
-            this.imageLink.push(image.link)
-          } else {
-            this.imageLink.push('http://i.imgur.com/' + image.id + 'h.jpg')
-          }
-        },
-      (err)=>{},
-      ()=>{
-        this.storiesArr.push(story);
-      })
-    } else{
+            if (['image/png', 'image/jpeg'].includes(image.type)) {
+              this.imageLink.push(image.link)
+            } else {
+              this.imageLink.push('http://i.imgur.com/' + image.id + 'h.jpg')
+            }
+          },
+          (err)=> {
+          },
+          ()=> {
+            this.storiesArr.push(story);
+            this.commentUrl.push(permalink)
+          })
+    }
+    else {
       this.imageLink.push(url)
       this.storiesArr.push(story)
+      this.commentUrl.push(permalink)
     }
 
   }
 
+  crawlGfycat(url: string, story, permalink) {
+    let gifSplit
+
+    if (gifSplit = (/[^((https|http)?(:\/\/)?(?:i\.|m\.|edge\.|www\.|thumbs\.)*gfycat\.com\/(?:detail\/))].+?(?=\?)/g).exec(url)) {
+      this.http.get('https://api.gfycat.com/v1test/gfycats/' + gifSplit[0])
+        .map(data => data.json())
+        .subscribe(
+          res => {
+            this.imageLink.push(res.gfyItem.thumb360PosterUrl)
+          },
+          (err)=> {
+          },
+          ()=> {
+            this.storiesArr.push(story);
+            this.commentUrl.push(permalink)
+          })
+    } else {
+      let gfyId = url.split('/').pop().split('-')[0]
+      this.http.get('https://api.gfycat.com/v1test/gfycats/' + gfyId)
+        .map(data => data.json())
+        .subscribe(
+          res => {
+            this.imageLink.push(res.gfyItem.thumb360PosterUrl)
+          },
+          (err)=> {
+          },
+          ()=> {
+            this.storiesArr.push(story);
+            this.commentUrl.push(permalink)
+          })
+    }
+  }
+
+  crawlStreamable(url: string, story, permalink) {
+    var streamableId = url.substr(url.lastIndexOf('/') + 1);
+
+    if (streamableId) {
+      this.http.get('https://api.streamable.com/videos/' + streamableId)
+        .map(data => data.json())
+        .subscribe(
+          res => {
+            // this.imageLink.push(res.thumbnail_url)
+            this.imageLink.push(res.files.mp4.url)
+          },
+          (err)=> {
+          },
+          ()=> {
+            this.storiesArr.push(story);
+            this.commentUrl.push(permalink)
+          })
+    }
+  }
+
+  crawlGiphy(url: string, story, permalink){
+    let giphyId // = /^https?:\/\/((?:i\.|media\.)?giphy\.com\/media\/([^/\n]+)\/giphy\.gif|i\.giphy\.com\/([^/\n]+)\.gif|giphy\.com\/gifs\/(?:.*-)?([^/\n]+))/.exec(url).pop()
+    //https://api.giphy.com/v1/gifs/VmzI60RQG0fuw?api_key=dc6zaTOxFJmzC
+    console.log(url)
+
+
+    // console.log(/^https?:\/\/((?:i\.|media\.)?giphy\.com\/media\/([^/\n]+)\/giphy\.gif|i\.giphy\.com\/([^/\n]+)\.gif|giphy\.com\/gifs\/(?:.*-)?([^/\n]+))/.exec(url))
+    if (giphyId = /^https?:\/\/((?:i\.|media\.)?giphy\.com\/media\/([^/\n]+)\/giphy\.gif|i\.giphy\.com\/([^/\n]+)\.gif|giphy\.com\/gifs\/(?:.*-)?([^/\n]+))/.exec(url)) {
+      let res = giphyId.filter((val)=>{
+        return val !== undefined;
+      })
+      this.imageLink.push('https://i.giphy.com/' + res.pop() + '.webp')
+      this.storiesArr.push(story);
+      this.commentUrl.push(permalink)
+    }
+  }
 }
 
+/*
+* Some interesting notes: For performance reasons,
+* its better to parse everything at the root of the observable
+* and emit an object with the relevant properties
+*
+*
+*
+* */

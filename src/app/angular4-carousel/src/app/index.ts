@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { MatButtonModule } from '@angular/material';
 import { CarouselService, WindowWidthService } from './services';
 
 import {
@@ -23,7 +23,8 @@ import { CarouselHandlerDirective } from './directives';
     CarouselHandlerDirective
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule
   ],
   exports: [CarouselComponent],
   providers: [CarouselService, WindowWidthService],

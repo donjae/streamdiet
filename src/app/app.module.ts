@@ -8,23 +8,25 @@ import { CommentComponent } from './comment/comment.component';
 import { NewsComponent } from './news/news.component';
 import { RedditService } from './reddit/reddit.service';
 import { EmitterService } from './reddit/emitter.service';
-
-// import { CarouselComponent, CarouselItemElement } from './carousel/carousel.component';
-// import { CarouselItemDirective } from './carousel/carousel-item.directive';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CarouselModule } from './angular4-carousel';
-
+import { MatButtonModule } from '@angular/material';
+import { MatCardModule } from '@angular/material';
+import { CommentCardComponent } from './comment/comment-card/comment-card.component'
 @NgModule({
   imports: [
     BrowserModule,
     HttpModule,
-    CarouselModule
-    // BrowserAnimationsModule //carousel
+    CarouselModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCardModule
   ],
   declarations: [
     AppComponent,
     CommentComponent,
-    NewsComponent
+    NewsComponent,
+    CommentCardComponent
     //
     // CarouselItemDirective,
     // CarouselItemElement

@@ -6,6 +6,7 @@ import { CarouselService, ICarouselConfig, WindowWidthService } from '../../serv
 import { PinsComponent } from './pins';
 import { CarouselArrowsComponent } from './arrows';
 import { CarouselHandlerDirective } from '../../directives';
+import { MatButtonModule } from '@angular/material';
 
 @Component({
   selector: 'carousel',
@@ -14,36 +15,34 @@ import { CarouselHandlerDirective } from '../../directives';
        appCarouselHandler (handleAutoplay)="onHandleAutoplay($event)">
     <div class="carousel-bg"
          *ngFor="let img of loadedImages; let i = index"
-         [style.background-image]="'url('+img+')'"
-         [hidden]="i !== currentSlide"
-    ></div>
+         [style.background-image]="img !== null ? 'url('+img+')' : 'url('+randomUrl+')'"
+         [hidden]="i !== currentSlide">     
+    </div>
     <div class="darken-overlay"
          *ngFor="let img of loadedImages; let i = index"
-         [hidden]="i !== currentSlide"
-    ></div>
+         [hidden]="i !== currentSlide">
+    </div>
     <carousel-slide *ngFor="let img of loadedImages; let i = index"
          [src]="img"
          [slideNo]="i"
-         [style.display]="i !== currentSlide ? 'none' : 'flex'"
-         (click)="onChangeSlide('next')">
+         [style.display]="i !== currentSlide ? 'none' : 'flex'">
     </carousel-slide>
-  
-    <carousel-pins
-      *ngIf="galleryLength > 1"
-      [images]="loadedImages"
-      [currentSlide]="currentSlide"
-      (changeSlide)="onChangeSlideIndex($event);">
-    </carousel-pins>
-  
-    <carousel-arrows
-      *ngIf="galleryLength > 1"
-      (changeSlide)="onChangeSlide($event);"></carousel-arrows>
-      
+    <!--<carousel-pins-->
+      <!--*ngIf="galleryLength > 1"-->
+      <!--[images]="loadedImages"-->
+      <!--[currentSlide]="currentSlide"-->
+      <!--(changeSlide)="onChangeSlideIndex($event);">-->
+    <!--</carousel-pins>     -->
     <footer class="title"
      *ngFor="let story of stories; let s = index"
      [hidden]="s !== currentSlide">
-     <span>{{story.title}}</span>
+     <span (click)="onNavigate(story.url)">{{story.title}}</span>
     </footer>
+    <div class="button-wrapper"
+     *ngIf="galleryLength > 1">
+      <button mat-mini-fab class="arrow-btn-left" (click)="onChangeSlide('prev')">&lsaquo;</button>
+      <button mat-mini-fab class="arrow-btn-right" (click)="onChangeSlide('next')">&rsaquo;</button>
+    </div>
   </div>
 `,
   styleUrls: ['assets/carousel.styles.scss']
@@ -63,6 +62,7 @@ export class CarouselComponent implements OnInit, OnDestroy {
   public loadedImages: string[];
   public galleryLength: number;
   public currentSlide = 0;
+  randomUrl = 'https://source.unsplash.com/1600x900'
 
   constructor(private carouselService: CarouselService,
               private windowWidthService: WindowWidthService) { }
@@ -115,7 +115,7 @@ export class CarouselComponent implements OnInit, OnDestroy {
       this.currentSlide = this.currentSlide === this.loadedImages.length - 1 ? 0 : ++this.currentSlide;
     }
     this.carouselHandlerDirective.setNewSlide(this.currentSlide, direction);
-    this.disableCarouselNavBtns();
+    // this.disableCarouselNavBtns();
   }
 
   public onChangeSlideIndex(index: number): void {
@@ -127,7 +127,7 @@ export class CarouselComponent implements OnInit, OnDestroy {
 
     this.currentSlide = index;
     this.carouselHandlerDirective.setNewSlide(this.currentSlide, direction);
-    this.disableCarouselNavBtns();
+    // this.disableCarouselNavBtns();
   }
 
   public onHandleAutoplay(stopAutoplay): void {
@@ -160,5 +160,9 @@ export class CarouselComponent implements OnInit, OnDestroy {
     if (this.autoplayIntervalId) {
       clearInterval(this.autoplayIntervalId);
     }
+  }
+
+  onNavigate(url){
+    window.open(url, "_blank");
   }
 }

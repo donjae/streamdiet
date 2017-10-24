@@ -31,13 +31,12 @@
 
 .title{
   position: absolute;
-  bottom: 3rem;
+  bottom: 3.5rem;
   left: 2rem;
   color: white;
   z-index: 3;
   font-size: 1rem;
   margin-right: 3rem;
-  //line-height: 90%;
   font-weight: 500;
   text-rendering: optimizeLegibility;
   font-family: 'Montserrat', sans-serif;
@@ -55,4 +54,40 @@
   //padding: 0rem .3rem rem 0rem;
   text-align: left;
   background-color: rgba(38, 38, 38, 0.82);
+  transition: all 0.1s ease-in-out 0s;
+  &:hover{
+    color: #82B1FF;
+    text-decoration: underline;
+    transition: all 0.1s ease-in-out 0s;
+  }
+}
+
+.arrow-btn-left{
+  margin-right: auto;
+  color: white;
+  background-color: #35424a;
+}
+.arrow-btn-right{
+  color: white;
+  background-color: #35424a;
+  margin-left: auto;
+}
+.button-wrapper{
+  position: absolute;
+  bottom: .5rem;
+  //left: 2rem;
+  display: flex;
+  padding: 0 .5rem 0 .5rem;
+  box-sizing: border-box;
+  color: white;
+  z-index: 4;
+  font-size: 2rem;
+  //line-height: 90%;
+  font-weight: 500;
+  text-rendering: optimizeLegibility;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  position: absolute;
+  width: 100%;
+  display: flex;
 }
