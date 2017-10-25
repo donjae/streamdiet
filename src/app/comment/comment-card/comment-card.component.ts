@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnChanges, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { EmitterService } from '../../reddit/emitter.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
@@ -10,16 +10,14 @@ import { MatCardModule } from '@angular/material';
 @Component({
   selector: 'diet-comment-card',
   template: `
-  <div>
-    {{comment.body}}
-  </div>
+  <mat-card-title class="comment-author">{{comment.author}}</mat-card-title>
+  <mat-card-content class="comment-text">{{comment.body}}</mat-card-content>
   `,
   styleUrls: ['./comment-card.component.scss']
 })
-export class CommentCardComponent implements OnChanges{
+export class CommentCardComponent implements AfterViewChecked{
   @Input('comment') comment:any;
 
-  // @ViewChild('dataContainer') dataContainer: ElementRef;
 
   // loadData(data) {
 
@@ -34,7 +32,7 @@ export class CommentCardComponent implements OnChanges{
     // this.image = this.sanitization.bypassSecurityTrustStyle('url('+ story.preview.images[0].source.url + ')')
   }
 
-  ngOnChanges() {
+  ngAfterViewChecked() {
     // this.dataContainer.nativeElement.innerHTML = this.html;
     // console.log(this.html)
   }

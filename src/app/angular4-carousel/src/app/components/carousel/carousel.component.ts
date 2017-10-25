@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, forwardRef } from '@angular/core';
 import 'rxjs/add/operator/takeWhile';
-
 import { CarouselService, ICarouselConfig, WindowWidthService } from '../../services';
+import { EmitterService } from '../../../../../reddit/emitter.service'
 
 import { PinsComponent } from './pins';
 import { CarouselArrowsComponent } from './arrows';
@@ -65,7 +65,8 @@ export class CarouselComponent implements OnInit, OnDestroy {
   randomUrl = 'https://source.unsplash.com/1600x900'
 
   constructor(private carouselService: CarouselService,
-              private windowWidthService: WindowWidthService) { }
+              private windowWidthService: WindowWidthService,
+              private emitterService: EmitterService) { }
 
   ngOnInit() {
     this.initData();
@@ -87,7 +88,6 @@ export class CarouselComponent implements OnInit, OnDestroy {
       .takeWhile(() => !!this.galleryLength)
       .subscribe(
         (image) => {
-          console.log(image)
           this.loadedImages.push(image)
         }
       );
@@ -115,6 +115,7 @@ export class CarouselComponent implements OnInit, OnDestroy {
       this.currentSlide = this.currentSlide === this.loadedImages.length - 1 ? 0 : ++this.currentSlide;
     }
     this.carouselHandlerDirective.setNewSlide(this.currentSlide, direction);
+    this.emitterService.idxEmitter.emit(this.currentSlide)
     // this.disableCarouselNavBtns();
   }
 
@@ -142,8 +143,8 @@ export class CarouselComponent implements OnInit, OnDestroy {
   private startAutoplay(delay: number): void {
     this.autoplayIntervalId = setInterval(() => {
       this.onChangeSlide('next');
-      this.pinsComponent.disableNavButtons();
-      this.carouselArrowsComponent.disableNavButtons();
+      // this.pinsComponent.disableNavButtons();
+      // this.carouselArrowsComponent.disableNavButtons();
     }, delay);
   }
 
@@ -152,8 +153,8 @@ export class CarouselComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.carouselArrowsComponent.disableNavButtons();
-    this.pinsComponent.disableNavButtons();
+    // this.carouselArrowsComponent.disableNavButtons();
+    // this.pinsComponent.disableNavButtons();
   }
 
   ngOnDestroy() {

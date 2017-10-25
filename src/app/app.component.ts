@@ -15,7 +15,7 @@ import 'rxjs/add/observable/of';
       <div class="Grid-cell">
         <diet-news></diet-news>
       </div>
-      <div class="Grid-cell2">
+      <div class="Grid-cell2" #chatWindow [scrollTop]="chatWindow.scrollHeight">
         <diet-comment></diet-comment>
       </div>
     </div>
@@ -24,10 +24,6 @@ import 'rxjs/add/observable/of';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  // title: string;
-  // domain: string;
-  // author: string;
-  // url: string;
   story: Object
   imageLink = []
   storiesArr = []
@@ -47,13 +43,10 @@ export class AppComponent implements OnInit {
 
 
     this.http.get('https://www.reddit.com/r/popular/hot.json')
-    // Mergemap is required to merge nested object in array
       .mergeMap(response => response.json().data.children)
       .map(data => Object.keys(data).map(k => data[k]))
       .subscribe(
         (data)=> {
-          // emitted.stories.push(data[1]);
-          // console.log(data[1])
           if (imgur.test(data[1].domain)) {
             this.crawlImgur(data[1].url, data[1], data[1].permalink)
           }
@@ -81,9 +74,6 @@ export class AppComponent implements OnInit {
           console.log('Parsing Error: %s', err);
         },
         ()=> {
-          // this.story = result[0]
-          // console.log(result)
-          // emitted.stories = result
           emitted.images = this.imageLink
           emitted.stories = this.storiesArr
           emitted.commentUrl = this.commentUrl
@@ -96,8 +86,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  //dont need to retain order
 
   crawlImgur(url: string, story, permalink) {
 
@@ -216,7 +204,6 @@ export class AppComponent implements OnInit {
         .map(data => data.json())
         .subscribe(
           res => {
-            // this.imageLink.push(res.thumbnail_url)
             this.imageLink.push(res.files.mp4.url)
           },
           (err)=> {
@@ -229,12 +216,8 @@ export class AppComponent implements OnInit {
   }
 
   crawlGiphy(url: string, story, permalink){
-    let giphyId // = /^https?:\/\/((?:i\.|media\.)?giphy\.com\/media\/([^/\n]+)\/giphy\.gif|i\.giphy\.com\/([^/\n]+)\.gif|giphy\.com\/gifs\/(?:.*-)?([^/\n]+))/.exec(url).pop()
-    //https://api.giphy.com/v1/gifs/VmzI60RQG0fuw?api_key=dc6zaTOxFJmzC
-    console.log(url)
+    let giphyId
 
-
-    // console.log(/^https?:\/\/((?:i\.|media\.)?giphy\.com\/media\/([^/\n]+)\/giphy\.gif|i\.giphy\.com\/([^/\n]+)\.gif|giphy\.com\/gifs\/(?:.*-)?([^/\n]+))/.exec(url))
     if (giphyId = /^https?:\/\/((?:i\.|media\.)?giphy\.com\/media\/([^/\n]+)\/giphy\.gif|i\.giphy\.com\/([^/\n]+)\.gif|giphy\.com\/gifs\/(?:.*-)?([^/\n]+))/.exec(url)) {
       let res = giphyId.filter((val)=>{
         return val !== undefined;
@@ -246,11 +229,3 @@ export class AppComponent implements OnInit {
   }
 }
 
-/*
-* Some interesting notes: For performance reasons,
-* its better to parse everything at the root of the observable
-* and emit an object with the relevant properties
-*
-*
-*
-* */

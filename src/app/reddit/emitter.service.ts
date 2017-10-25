@@ -12,6 +12,6 @@ export class EmitterService{
   ){}
 
   newsEmitter = new EventEmitter();
-  widthEmitter = new EventEmitter();
+  idxEmitter= new EventEmitter();
 
 }

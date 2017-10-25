@@ -41,17 +41,15 @@
   text-rendering: optimizeLegibility;
   font-family: 'Montserrat', sans-serif;
 }
-//background-color: rgba(38, 38, 38, 0.95);
 
-@media (min-width: 65em) {
+@media (min-width: 45em) {
   .title{
-    //line-height: 90%;
     font-size: 2rem;
   }
 
 }
+
 .title span{
-  //padding: 0rem .3rem rem 0rem;
   text-align: left;
   background-color: rgba(38, 38, 38, 0.82);
   transition: all 0.1s ease-in-out 0s;
@@ -62,16 +60,6 @@
   }
 }
 
-.arrow-btn-left{
-  margin-right: auto;
-  color: white;
-  background-color: #35424a;
-}
-.arrow-btn-right{
-  color: white;
-  background-color: #35424a;
-  margin-left: auto;
-}
 .button-wrapper{
   position: absolute;
   bottom: .5rem;
@@ -90,4 +78,14 @@
   position: absolute;
   width: 100%;
   display: flex;
+}
+.arrow-btn-left{
+  margin-right: auto;
+  color: white;
+  background-color: #7979bf;
+}
+.arrow-btn-right{
+  color: white;
+  background-color: #7979bf;
+  margin-left: auto;
 }
