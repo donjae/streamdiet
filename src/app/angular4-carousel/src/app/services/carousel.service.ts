@@ -44,6 +44,7 @@ export class CarouselService {
     const createImageElement = (image: string): void => {
       const imgElement = document.createElement('img');
       imgElement.src = image;
+      // console.log(image)
 
       imgElement.onload = this.onImageElementLoad.bind(this, imageSources, image);
 
@@ -63,7 +64,9 @@ export class CarouselService {
   }
 
   private onImageElementLoadError(imageSources: string[], image: string): any {
+    // imageSources
     imageSources.splice(imageSources.indexOf(image), 1);
+    // console.log(image)
 
     this.carouselTinyLogger(image, false);
 

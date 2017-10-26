@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RedditService } from './reddit/reddit.service';
 import { Http, Headers } from '@angular/http';
 import { EmitterService } from './reddit/emitter.service'
-// import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import "rxjs/add/operator/mergeMap";
 import 'rxjs/add/observable/of';

@@ -22,11 +22,17 @@ import { MatButtonModule } from '@angular/material';
          *ngFor="let img of loadedImages; let i = index"
          [hidden]="i !== currentSlide">
     </div>
-    <carousel-slide *ngFor="let img of loadedImages; let i = index"
-         [src]="img"
-         [slideNo]="i"
-         [style.display]="i !== currentSlide ? 'none' : 'flex'">
-    </carousel-slide>
+    <!--<div *ngIf="img !== null">-->
+      <carousel-slide 
+      *ngFor="let img of loadedImages; let i = index"
+           [src]="img"
+           [slideNo]="i"
+           [style.display]="i !== currentSlide ? 'none' : 'flex'"
+           #carouselSlide
+           >
+           <!--[onerror]="replaceImg()"-->
+      </carousel-slide>
+    <!--</div>-->
     <!--<carousel-pins-->
       <!--*ngIf="galleryLength > 1"-->
       <!--[images]="loadedImages"-->
