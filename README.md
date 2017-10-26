@@ -1,3 +1,4 @@
+http://streamdiet.storage.googleapis.com/index.html
 # Streamdiet
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.7.
